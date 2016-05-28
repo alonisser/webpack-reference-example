@@ -3,7 +3,8 @@
  */
 import ReactDOM from 'react-dom';
 import React from 'react';
-import CommentBox from '../components/commentBox.jsx';
+import CommentBox from './components/commentBox.jsx';
+var style = require('./css/base.css');
 
 
 ReactDOM.render(
