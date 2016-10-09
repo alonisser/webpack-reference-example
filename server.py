@@ -12,23 +12,26 @@ import json
 import os
 import time
 from flask import Flask, Response, request
+from flask_cors import CORS, cross_origin
+
 
 app = Flask(__name__, static_url_path='', static_folder='public')
+CORS(app)
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 @app.route('/api/comments/<int:comment_id>/like', methods=['POST', 'DELETE'])
 def comment_like_handler(comment_id):
     with open('comments.json', 'r') as f:
         comments = json.loads(f.read())
-        mapped_comments = {int((comment['key']), comment) for comment in comments}
+        mapped_comments = {int(comment['id']): comment for comment in comments}
     comment = mapped_comments[comment_id]
     if request.method == 'POST':
 
-        comment.isLiked = True
+        comment['isLiked'] = True
 
     if request.method == 'DELETE':
 
-            comment.isLiked = False
+            comment['isLiked'] = False
 
     mapped_comments[comment_id] = comment
     comments =  mapped_comments.values()
