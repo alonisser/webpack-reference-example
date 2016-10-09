@@ -6,7 +6,6 @@ export default class LikeButton extends React.Component {
         event.preventDefault();
         let isLiked = !this.props.isLiked;
         this.props.onLikeToggle({isLiked:isLiked});
-        console.log('click')
     }
     render() {
         let heartClass = this.props.isLiked ? 'fa fa-heart' : 'fa fa-heart-o';

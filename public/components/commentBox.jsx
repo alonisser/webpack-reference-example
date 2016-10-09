@@ -1,7 +1,8 @@
 import React from '../../node_modules/react';
 import CommentList from './commentList.jsx';
 import CommentForm from './commentForm.jsx';
-var $ = require('jquery');
+const $ = require('jquery');
+const _ = require('lodash');
 import url from 'url';
 
 export default class CommentBox extends React.Component {
@@ -62,7 +63,7 @@ export default class CommentBox extends React.Component {
         this.setState({data: tempNewComments});
         var key = newCommentLikeStatus.commentId;
         let toggleType = newCommentLikeStatus.isLiked ? "POST" : "DELETE";
-        var resolvedUrl = url.resolve(this.props.url, `${key}/like`);
+        var resolvedUrl = url.resolve(this.props.url, `comments/${key}/like`);
         $.ajax({
             url: resolvedUrl,
             dataType:"json",

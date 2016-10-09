@@ -1,5 +1,6 @@
 import React from '../../node_modules/react';
 import Comment from './comment.jsx';
+const _ = require('lodash');
 
 
 export default  class CommentList extends React.Component {

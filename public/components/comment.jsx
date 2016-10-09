@@ -20,6 +20,7 @@ export default class Comment extends React.Component {
 
 
     render() {
+        console.log('we got here!', this.props.author);
         return (
             <li>
                 <div className="comment">
