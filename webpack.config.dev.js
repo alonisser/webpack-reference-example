@@ -7,6 +7,8 @@ const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const ETP = require("extract-text-webpack-plugin");
+const combineLoaders = require('webpack-combine-loaders');
+const WebpackBrowserPlugin = require('webpack-browser-plugin');
 
 
 module.exports = {
@@ -25,26 +27,31 @@ module.exports = {
     loaders: [
       {
         test: /.jsx?$/, //regex getting js or jsx files
-        loader: 'babel-loader', // the loader name, babel transpiler, can also be just babel
         exclude: '/node_modules/', //do not transpile node_modules
-        query: { //another way to would be using in loader: babel?presets[]=react,presets[]=es2015 using the query params array syntax
-          presets: ['es2015', 'react'] // a babel preset is preset of babel plugins loaded together, not a webpack feature
-          //babel configuration can also be stored seperatly in .babelrc file
+        loader: combineLoaders([{
+          // test: /.jsx?$/, //regex getting js or jsx files
+          loader: 'babel-loader', // the loader name, babel transpiler, can also be just babel
+          // exclude: '/node_modules/', //do not transpile node_modules
+          query: { //another way to would be using in loader: babel?presets[]=react,presets[]=es2015 using the query params array syntax
+            presets: ['es2015', 'react'] // a babel preset is preset of babel plugins loaded together, not a webpack feature
+            //babel configuration can also be stored seperatly in .babelrc file
+          }
         }
+        ])
       },
       {
         test: /.scss/,
         loader: 'style!postcss!css!sass', //would be processed right to left : load sass, run postcss filters, load css as module, inline styles
         //with inline results, but for styles.css file use
-        // loader: ETP.extract('style!postcss!css!sass'), //would be processed right to left : load sass, run postcss filters, load css as module, inline styles
-        exclude: '/node_modules/', //do not transpile node_modules
+        // loader: ETP.extract('style!postcss!css!sass'), //same but extract the html
+        // exclude: '/node_modules/', //do not transpile node_modules
       },
       {
         test: /.css/,
         loader: 'style!css!postcss', //would be processed right to left : load css via postcss filters, inline styles
         //with inline results, but for styles.css file use
         // loader: ETP.extract('style!css!postcss'), //would be processed right to left : load css, run postcss filters, load css as module, inline styles
-        exclude: '/node_modules/', //do not transpile node_modules
+        // exclude: '/node_modules/', //do not transpile node_modules
         include: path.join(__dirname, 'public/css')
       },
       {
@@ -63,8 +70,11 @@ module.exports = {
       browsers: ['last 2 versions']
     })]
   },
+  devtool: 'source-map',
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
+    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+    new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
+    new WebpackBrowserPlugin()
   ]
 
 };
