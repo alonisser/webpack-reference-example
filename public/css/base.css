@@ -44,6 +44,7 @@ h1 {
 h2 {
   border-bottom: 1px solid #eee;
   font-size: 2em;
+  /*color: #4652be; !* example for hot module reload *!*/
 }
 
 h3 {
