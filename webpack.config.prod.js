@@ -9,37 +9,37 @@ const webpack = require('webpack');
 const combineLoaders = require('webpack-combine-loaders');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ETP = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 module.exports = {
   entry: {
-    app: './public/main.js',
+    app: './src/main.js',
     vendor: ['jquery', 'lodash', 'react', 'react-dom']
   },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
     // publicPath: "/public/",
-    filename: 'bundle.js'
+    filename: 'bundle.[hash].js'
   },
 
   module: {
     loaders: [
       {
         test: /.jsx?$/, //regex getting js or jsx files
-        exclude: '/node_modules/', //do not transpile node_modules
+        exclude: path.resolve(__dirname, 'node_modules/'),
         loader: combineLoaders([{
 
           loader: 'babel-loader',
 
           query: {
-            presets: ['es2015', 'react']
-
+            presets: ['es2015', 'react'],
+            compact:false
           }
         },
           {
-            loader: 'strip-loader',// perhaps not needed since can be done by uglify?
+            loader: 'strip-loader',// cleans debugging perhaps not needed since can be done by uglify?
             query: {
               strip: ['debug', 'console.log']
             }
@@ -48,17 +48,13 @@ module.exports = {
       },
       {
         test: /.scss/,
-        loader: 'style!postcss!css!sass', //would be processed right to left : load sass, run postcss filters, load css as module, inline styles
-        //with inline results, but for styles.css file use
-        // loader: ETP.extract('style!postcss!css!sass'), //same but extract the html
-        // exclude: '/node_modules/', //do not transpile node_modules
+        loader: 'style!css!postcss!sass',
+        exclude: path.resolve(__dirname, 'node_modules/'),
       },
       {
         test: /.css/,
-        loader: 'style!css!postcss', //would be processed right to left : load css via postcss filters, inline styles
-        //with inline results, but for styles.css file use
-        // loader: ETP.extract('style!css!postcss'), //would be processed right to left : load css, run postcss filters, load css as module, inline styles
-        // exclude: '/node_modules/', //do not transpile node_modules
+        loader: 'style!css!postcss',
+
         include: path.join(__dirname, 'public/css')
       },
       {
@@ -83,9 +79,14 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
     new webpack.optimize.UglifyJsPlugin({mangle: false}),
     new webpack.optimize.DedupePlugin(),
+    new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
+    new HtmlWebpackPlugin({
+      hash: true,
 
+      template: path.resolve(__dirname, 'src/index.html'),
 
-    new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"])
+    }),
+    // new ExtractTextPlugin("styles.css")
 
   ]
 
