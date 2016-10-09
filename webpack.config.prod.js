@@ -4,17 +4,19 @@
 //A lot of credit to https://medium.com/@rajaraodv/webpack-the-confusing-parts-58712f8fcad9#.q4vvpm28n
 
 const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 const path = require('path');
 const webpack = require('webpack');
 const combineLoaders = require('webpack-combine-loaders');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 
 module.exports = {
   entry: {
-    app: './src/main.js',
+    app: './public/main.js',
     vendor: ['jquery', 'lodash', 'react', 'react-dom']
   },
 
@@ -48,12 +50,13 @@ module.exports = {
       },
       {
         test: /.scss/,
-        loader: 'style!css!postcss!sass',
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
         exclude: path.resolve(__dirname, 'node_modules/'),
+        include: path.join(__dirname, 'public/scss')
       },
       {
         test: /.css/,
-        loader: 'style!css!postcss',
+        loader: ExtractTextPlugin.extract('style','css', 'postcss'),
 
         include: path.join(__dirname, 'public/css')
       },
@@ -71,7 +74,7 @@ module.exports = {
   postcss: function () {
     return [autoprefixer({
       browsers: ['last 2 versions']
-    })]
+    }), cssnano()]
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
@@ -81,12 +84,11 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
     new HtmlWebpackPlugin({
-      hash: true,
 
       template: path.resolve(__dirname, 'src/index.html'),
 
     }),
-    // new ExtractTextPlugin("styles.css")
+    new ExtractTextPlugin("styles.[hash].css")
 
   ]
 

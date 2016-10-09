@@ -42,15 +42,15 @@ module.exports = {
         ])
       },
       {
-        test: /.scss/,
+        test: /\.scss$/,
         exclude: path.resolve(__dirname, 'node_modules/'),
         loader: 'style!css!postcss!sass', //would be processed right to left : load sass, run postcss filters, load css as module, inline styles
         //with inline results, but for styles.css file use
-        // loader: ETP.extract('style!postcss!css!sass'), //same but extract the html
-        // exclude: '/node_modules/', //do not transpile node_modules
+
+        include: path.join(__dirname, 'public/scss')
       },
       {
-        test: /.css/,
+        test: /\.css$/,
         exclude: path.resolve(__dirname, 'node_modules/'),
         loader: 'style!css!postcss', //would be processed right to left : load css via postcss filters, inline styles
         //with inline results, but for styles.css file use
@@ -80,12 +80,11 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
     new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
     new HtmlWebpackPlugin({
-      hash: true,
-
+      
       template: path.resolve(__dirname, 'src/index.html'),
 
     }),
-    // new ExtractTextPlugin("styles.css")
+    new ExtractTextPlugin("styles.css")
     // new WebpackBrowserPlugin()
   ]
 
