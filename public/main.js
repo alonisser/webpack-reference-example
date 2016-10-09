@@ -4,10 +4,10 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import CommentBox from './components/commentBox.jsx';
-var style = require('./css/base.css');
-
+const style = require('./css/base.css');
+const apiUrl = "http://"+ process.env.API_ADDRESS +"/api/comments";
 
 ReactDOM.render(
-  <CommentBox url="http://localhost:3000/api/comments" pollInterval={2000}/>,
+  <CommentBox url={apiUrl} pollInterval={2000}/>,
   document.getElementById('content')
 );
