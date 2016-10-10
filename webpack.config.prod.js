@@ -17,7 +17,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   entry: {
     app: './public/main.js',
-    vendor: ['jquery', 'lodash', 'react', 'react-dom']
+    vendor: ['react', 'react-dom']
   },
 
   output: {
@@ -25,6 +25,17 @@ module.exports = {
     // publicPath: "/public/",
     filename: 'bundle.[hash].js'
   },
+
+  externals: {
+    // require("jquery") is external and available
+    //  on the global var jQuery
+    "jquery": "jQuery",
+    "$": "jQuery",
+    "_": "_",
+    "lodash":"_",
+    "marked":"marked"
+  },
+
 
   module: {
     loaders: [
@@ -79,13 +90,21 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new CopyWebpackPlugin([{'from': 'public'}]),
+    new webpack.ProvidePlugin({ //Workaround to support jquery plugins (if needed)
+      $: "jquery",
+      jQuery: "jquery",
+      _:"lodash",
+      lodash:"lodash",
+      marked:"marked"
+    }),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+
     new webpack.optimize.UglifyJsPlugin({mangle: false}),
     new webpack.optimize.DedupePlugin(),
     new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
     new HtmlWebpackPlugin({
 
-      template: path.resolve(__dirname, 'src/index.html'),
+      template: path.resolve(__dirname, 'src/prod/index.html'),
 
     }),
     new ExtractTextPlugin("styles.[hash].css")

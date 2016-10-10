@@ -6,7 +6,6 @@
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin  = require("extract-text-webpack-plugin");
 const combineLoaders = require('webpack-combine-loaders');
 const WebpackBrowserPlugin = require('webpack-browser-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -15,7 +14,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     app: './public/main.js',
-    vendor: ['jquery', 'lodash', 'react', 'react-dom']
+    vendor: ['jquery', 'lodash', 'react', 'react-dom', 'marked']
   },
   debug: true,
   output: {
@@ -77,14 +76,19 @@ module.exports = {
   },
   devtool: 'cheap-module-source-map',
   plugins: [
+    new webpack.ProvidePlugin({ //Workaround to support jquery plugins (if needed)
+      $: "jquery",
+      jQuery: "jquery",
+    }),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
     new webpack.EnvironmentPlugin(["NODE_ENV", "API_ADDRESS"]),
+
     new HtmlWebpackPlugin({
-      
+
       template: path.resolve(__dirname, 'src/index.html'),
 
     }),
-    new ExtractTextPlugin("styles.css")
+
     // new WebpackBrowserPlugin()
   ]
 
