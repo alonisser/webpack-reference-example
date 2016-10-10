@@ -31,6 +31,7 @@ module.exports = {
         loader: combineLoaders([{
           // test: /.jsx?$/, //regex getting js or jsx files
           loader: 'babel-loader', // the loader name, babel transpiler, can also be just babel
+          // loader: 'babel-loader!eslint-loader', // With eslint
           // exclude: '/node_modules/', //do not transpile node_modules
           query: { //another way to would be using in loader: babel?presets[]=react,presets[]=es2015 using the query params array syntax
             presets: ['es2015', 'react'], // a babel preset is preset of babel plugins loaded together, not a webpack feature
@@ -69,6 +70,10 @@ module.exports = {
 
     ]
   },
+  eslint: {
+    configFile: '.eslintrc.js'
+  },
+
   postcss: function () {
     return [autoprefixer({
       browsers: ['last 2 versions']
