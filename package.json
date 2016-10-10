@@ -1,7 +1,7 @@
 {
-  "name": "react-tutorial-webpack",
-  "version": "0.0.1",
-  "description": "Code from the React tutorial in es6 trying webpack as builder.",
+  "name": "webpack-reference",
+  "version": "0.1.0",
+  "description": "Code from the React tutorial in es6 trying webpack as builder.  Used as my Webpack reference project for various options and configurations",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.4.3",
@@ -48,16 +48,15 @@
   },
   "keywords": [
     "react",
-    "tutorial",
-    "comment",
+    "webpack",
     "example"
   ],
   "author": "alonisser",
   "bugs": {
-    "url": "https://github.com/reactjs/react-tutorial/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/reactjs/react-tutorial",
+  "homepage": "",
   "engines": {
-    "node": "0.12.x"
+    "node": "4.4.3"
   }
 }
